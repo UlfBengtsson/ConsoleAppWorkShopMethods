@@ -22,6 +22,9 @@ namespace ConsoleAppWorkShopMethods
 
                 switch (selection.ToUpper())
                 {
+                    case "MANY":
+                        ManyNumbers();
+                        break;
                     case "NAME":
                         name = AskUserForName();
                         break;
@@ -49,6 +52,25 @@ namespace ConsoleAppWorkShopMethods
             }
 
         }// End of Main
+
+        private static void ManyNumbers()
+        {
+            Random rng = new Random();
+
+            int[] numbers = new int[10];
+
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                numbers[i] = rng.Next(1, 121);
+            }
+
+            foreach (int aNumber in numbers)
+            {
+                Console.WriteLine(aNumber);
+            }
+
+            Console.WriteLine(numbers); // Dose .ToString() on Objects
+        }
 
         /// <summary>
         /// Name length min 2, max 60
@@ -128,19 +150,34 @@ namespace ConsoleAppWorkShopMethods
         static double AskUserForX(string x, double min, double max)
         {
             bool notANumber = true;
-            bool didPhars = false;
             double result = double.MaxValue;
 
             do
             {
                 Console.WriteLine($"Pleace enter the persons {x}, min = {min} and max = {max}\n{x}: ");
-                didPhars = double.TryParse(Console.ReadLine(), out result);
 
-                if ( !didPhars )
+                try
+                {
+                    result = double.Parse(Console.ReadLine());
+                }
+                catch (FormatException)
                 {
                     Console.WriteLine("Was not able to understand what number you typed, use digiets not text.");
                 }
-                else if (result < min || result > max)
+                catch (OverflowException)
+                {
+                    Console.WriteLine("The number was too big to handel.");
+                }
+                catch (ArgumentNullException)
+                {
+                    Console.WriteLine("Did not recive any input!");
+                }
+                catch (Exception exception)   // catches all exception that was not one of the above.
+                {
+                    Console.WriteLine(exception.Message);
+                }
+
+                if (result < min || result > max)
                 {
                     Console.WriteLine($"Maximum is {max} ans Minimum is {min}.");
                 }
